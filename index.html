@@ -96,13 +96,23 @@
       function AddDataItem(Data) {
         axios
           .post(
-            "https://crudcrud.com/api/39621734b0524da2bb68c0cf85272fd7/data",
+            "https://crudcrud.com/api/c4a5baa9a6e24b77b889bc0ec0cddda5/data",
             Data
           )
           .then((res) => ShowAddedData(res.data))
           .catch((err) => console.log(err));
       }
     }
+    // window.addEventListener("DOMContentLoaded", () => {
+    axios
+      .get("https://crudcrud.com/api/c4a5baa9a6e24b77b889bc0ec0cddda5/data")
+      .then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          ShowAddedData(res.data[i]);
+        }
+      })
+      .catch((err) => console.log(err));
+    // });
 
     function ShowAddedData(obj) {
       let newRow = document.createElement("tr");
@@ -123,39 +133,76 @@
       priceCell.textContent = obj.price;
       newRow.appendChild(priceCell);
 
-      let deleteCell = document.createElement("td");
-      let deleteButton = document.createElement("input");
-      deleteButton.type = "button";
-      deleteButton.value = "Delete";
-      deleteButton.className = "btn-danger btn-sm";
-      deleteButton.onclick = function () {
-        deleteData(obj._id);
-        newRow.remove();
-      };
-      deleteCell.appendChild(deleteButton);
-      newRow.appendChild(deleteCell);
-
       let table = document.getElementById("inventoryTable");
       table.appendChild(newRow);
 
       console.log(newRow);
 
-      let editcell = document.createElement("td");
-      let editbtn = document.createElement("input");
-      editbtn.type = "button";
-      editbtn.value = "Edit";
-      editbtn.className = "btn-success btn-sm float-right edit";
-      editbtn.onclick = function () {
-        updateDataForm(obj);
+      let deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete";
+      deleteButton.className = " btn btn-danger btn-sm float-right edit";
+      deleteButton.onclick = function () {
+        deleteData(obj._id);
+        newRow.remove();
       };
-      deleteCell.appendChild(editbtn);
-      newRow.appendChild(editcell);
+      newRow.appendChild(deleteButton);
+
+      //   let editcell = document.createElement("td");
+      //   let editbtn = document.createElement("input");
+      //   editbtn.type = "button";
+      //   editbtn.value = "Edit";
+      //   editbtn.className = "btn-success btn-sm float-right edit";
+      //   editbtn.onclick = function () {
+      //     deleteData(obj._id);
+      //     populateEditFields(obj);
+      //   };
+      //   deleteCell.appendChild(editbtn);
+      //   newRow.appendChild(editcell);
+
+      // Create Buy 1 button
+      let buy1Button = document.createElement("button");
+      buy1Button.textContent = "Buy 1";
+      buy1Button.className = "btn btn-primary btn-sm";
+
+      buy1Button.onclick = function () {
+        // Decrease quantity by 1
+        const updatedQuantity = parseInt(obj.Quantity) - 1;
+        console.log("decrease", updatedQuantity);
+        PUtData(
+          obj._id,
+          obj.category_table,
+          obj.description,
+          updatedQuantity,
+          obj.price
+        );
+        quantityCell.textContent = updatedQuantity;
+      };
+      newRow.appendChild(buy1Button);
+
+      // Create Buy 2 button
+      let buy2Button = document.createElement("button");
+      buy2Button.textContent = "Buy 2";
+      buy2Button.className = "btn btn-success btn-sm";
+      buy2Button.onclick = function () {
+        // Increase quantity by 2
+        const updatedQuantity = parseInt(obj.Quantity) + 2;
+        console.log("increase", updatedQuantity);
+        PUtData(
+          obj._id,
+          obj.category_table,
+          obj.description,
+          updatedQuantity,
+          obj.price
+        );
+        quantityCell.textContent = updatedQuantity;
+      };
+      newRow.appendChild(buy2Button);
     }
 
     function deleteData(UserId) {
       axios
         .delete(
-          `https://crudcrud.com/api/39621734b0524da2bb68c0cf85272fd7/data/${UserId}`
+          `https://crudcrud.com/api/c4a5baa9a6e24b77b889bc0ec0cddda5/data/${UserId}`
         )
         .then((res) => {
           console.log("Deleted object", UserId);
@@ -164,24 +211,22 @@
           console.log(err);
         });
     }
+    let currentEditItemId;
 
-    function updateDataForm(obj) {
-      deleteData(obj);
-      document.getElementById("quant").value = obj.Quantity;
-      document.getElementById("rs").value = obj.price;
-    }
-    function updateData() {
-      const updatedQuantity = document.getElementById("quant").value;
-      const updatedPrice = document.getElementById("rs").value;
-
-      PUtData(updatedQuantity, updatedPrice);
-    }
-
-    function PUtData(UserId, updatedQuantity, updatedPrice) {
+    //when click buy then refresh the page and chage the data
+    function PUtData(
+      UserId,
+      category_table,
+      description,
+      updatedQuantity,
+      updatedPrice
+    ) {
       axios
         .put(
-          `https://crudcrud.com/api/39621734b0524da2bb68c0cf85272fd7/data/${UserId}`,
+          `https://crudcrud.com/api/c4a5baa9a6e24b77b889bc0ec0cddda5/data/${UserId}`,
           {
+            category_table: category_table,
+            description: description,
             Quantity: updatedQuantity,
             price: updatedPrice,
           }
@@ -192,5 +237,7 @@
         })
         .catch((err) => console.log(err));
     }
+
+    function populateData(data) {}
   </script>
 </html>
