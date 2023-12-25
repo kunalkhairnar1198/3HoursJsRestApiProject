@@ -3,32 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Inventory App</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"
+      integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
   </head>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-    crossorigin="anonymous"
-  />
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"
-    integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  ></script>
 
-  <title>App project name</title>
   <body>
     <h1 style="text-align: center">Hello Project Start!</h1>
     <h2 style="text-align: center">Inventory management App</h2>
 
-    <!-- form start -->
+    <!-- form will start -->
     <form action="#" class="form-control" id="form" onsubmit="AddItem(event)">
       <div class="container text-center p-5" id="container">
         <div class="row align-items-start">
@@ -63,8 +62,7 @@
       </div>
     </form>
 
-    <!-- print the invetntory data -->
-
+   <!-- print data -->
     <table class="table table-bordered" id="inventoryTable">
       <thead>
         <tr>
@@ -72,138 +70,123 @@
           <th id="desc">Description</th>
           <th id="quant">Quantity</th>
           <th id="rs">Price</th>
+          <th id="buttons">ManageBtns</th>
         </tr>
       </thead>
     </table>
-  </body>
-  <script>
-    function AddItem(event) {
-      event.preventDefault();
-      let category_table = document.getElementById("category").value;
-      let description = document.getElementById("desc").value;
-      let Quantity = document.getElementById("number").value;
-      let price = document.getElementById("price").value;
 
-      let Data = {
-        category_table,
-        description,
-        Quantity,
-        price,
-      };
+    <script>
 
-      AddDataItem(Data);
+      // create crud to crud empty api and use http request using axios get post update delete etc
+      function AddItem(event) {
+        event.preventDefault();
+        let category_table = document.getElementById("category").value;
+        let description = document.getElementById("desc").value;
+        let Quantity = document.getElementById("number").value;
+        let price = document.getElementById("price").value;
 
-      function AddDataItem(Data) {
-        axios
-          .post(
-            "https://crudcrud.com/api/c4a5baa9a6e24b77b889bc0ec0cddda5/data",
-            Data
-          )
-          .then((res) => ShowAddedData(res.data))
-          .catch((err) => console.log(err));
-      }
-    }
-    // window.addEventListener("DOMContentLoaded", () => {
-    axios
-      .get("https://crudcrud.com/api/c4a5baa9a6e24b77b889bc0ec0cddda5/data")
-      .then((res) => {
-        for (let i = 0; i < res.data.length; i++) {
-          ShowAddedData(res.data[i]);
+        let Data = {
+          category_table,
+          description,
+          Quantity,
+          price,
+        };
+
+        AddDataItem(Data);
+
+        function AddDataItem(Data) {
+          axios.post("https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data",Data)
+            .then((res) => ShowAddedData(res.data))//it returns callback resolve it return as an promise
+            .catch((err) => console.log(err)); // it got error then get catch block request is not working
         }
-      })
-      .catch((err) => console.log(err));
-    // });
+      }
 
-    function ShowAddedData(obj) {
-      let newRow = document.createElement("tr");
+      window.addEventListener("DOMContentLoaded", () => {
+        axios.get("https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data")
+          .then((res) => {
+            for (let i = 0; i < res.data.length; i++) {
+              ShowAddedData(res.data[i]);
+            }
+          })
+          .catch((err) => console.log('network error'));
+      });
 
-      let categoryCell = document.createElement("td");
-      categoryCell.textContent = obj.category_table;
-      newRow.appendChild(categoryCell);
+      function ShowAddedData(obj) {
+        let newRow = document.createElement("tr");
 
-      let descriptionCell = document.createElement("td");
-      descriptionCell.textContent = obj.description;
-      newRow.appendChild(descriptionCell);
+        let categoryCell = document.createElement("td");
+        categoryCell.textContent = obj.category_table;
+        newRow.appendChild(categoryCell);
 
-      let quantityCell = document.createElement("td");
-      quantityCell.textContent = obj.Quantity;
-      newRow.appendChild(quantityCell);
+        let descriptionCell = document.createElement("td");
+        descriptionCell.textContent = obj.description;
+        newRow.appendChild(descriptionCell);
 
-      let priceCell = document.createElement("td");
-      priceCell.textContent = obj.price;
-      newRow.appendChild(priceCell);
+        let quantityCell = document.createElement("td");
+        quantityCell.textContent = obj.Quantity;
+        newRow.appendChild(quantityCell);
 
-      let table = document.getElementById("inventoryTable");
-      table.appendChild(newRow);
+        let priceCell = document.createElement("td");
+        priceCell.textContent = obj.price;
+        newRow.appendChild(priceCell);
 
-      console.log(newRow);
+        let table = document.getElementById("inventoryTable");
+        table.appendChild(newRow);
 
-      let deleteButton = document.createElement("button");
-      deleteButton.textContent = "Delete";
-      deleteButton.className = " btn btn-danger btn-sm float-right edit";
-      deleteButton.onclick = function () {
-        deleteData(obj._id);
-        newRow.remove();
-      };
-      newRow.appendChild(deleteButton);
+        let deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.className = " btn btn-danger btn-sm float-right edit";
+        deleteButton.onclick = function () {
+          deleteData(obj._id);
+          newRow.remove();
+        };
+        newRow.appendChild(deleteButton);
 
-      //   let editcell = document.createElement("td");
-      //   let editbtn = document.createElement("input");
-      //   editbtn.type = "button";
-      //   editbtn.value = "Edit";
-      //   editbtn.className = "btn-success btn-sm float-right edit";
-      //   editbtn.onclick = function () {
-      //     deleteData(obj._id);
-      //     populateEditFields(obj);
-      //   };
-      //   deleteCell.appendChild(editbtn);
-      //   newRow.appendChild(editcell);
+        
+        let buy1Button = document.createElement("button");
+        buy1Button.textContent = "Buy 1";
+        buy1Button.className = "btn btn-primary btn-sm";
 
-      // Create Buy 1 button
-      let buy1Button = document.createElement("button");
-      buy1Button.textContent = "Buy 1";
-      buy1Button.className = "btn btn-primary btn-sm";
+        buy1Button.onclick = function () {
+          // when click Decrease quantity by 1
+          obj.Quantity = parseInt(obj.Quantity) - 1;
+          console.log("decrease by 1", obj.Quantity);
+          PUtData(obj._id, obj.category_table, obj.description, obj.Quantity, obj.price);
+          quantityCell.textContent = obj.Quantity;
+        };
+        newRow.appendChild(buy1Button);
 
-      buy1Button.onclick = function () {
-        // Decrease quantity by 1
-        const updatedQuantity = parseInt(obj.Quantity) - 1;
-        console.log("decrease", updatedQuantity);
-        PUtData(
-          obj._id,
-          obj.category_table,
-          obj.description,
-          updatedQuantity,
-          obj.price
-        );
-        quantityCell.textContent = updatedQuantity;
-      };
-      newRow.appendChild(buy1Button);
+        
+        let buy2Button = document.createElement("button");
+        buy2Button.textContent = "Buy 2";
+        buy2Button.className = "btn btn-success btn-sm";
 
-      // Create Buy 2 button
-      let buy2Button = document.createElement("button");
-      buy2Button.textContent = "Buy 2";
-      buy2Button.className = "btn btn-success btn-sm";
-      buy2Button.onclick = function () {
-        // Increase quantity by 2
-        const updatedQuantity = parseInt(obj.Quantity) + 2;
-        console.log("increase", updatedQuantity);
-        PUtData(
-          obj._id,
-          obj.category_table,
-          obj.description,
-          updatedQuantity,
-          obj.price
-        );
-        quantityCell.textContent = updatedQuantity;
-      };
-      newRow.appendChild(buy2Button);
+        buy2Button.onclick = function () {
+          // when click Increase quantity by 1
+          obj.Quantity = parseInt(obj.Quantity) - 2 ;
+          console.log("decrease by 2", obj.Quantity);
+          PUtData(obj._id, obj.category_table, obj.description, obj.Quantity, obj.price);
+          quantityCell.textContent = obj.Quantity;
+        };
+        newRow.appendChild(buy2Button);
+
+        let buy3Button = document.createElement("button");
+        buy3Button.textContent = "Buy 3";
+        buy3Button.className = "btn btn-success btn-sm";
+
+        buy3Button.onclick = function () {
+          // when click Increase quantity by 1
+          obj.Quantity = parseInt(obj.Quantity) + 1;
+          console.log("increase by 1", obj.Quantity);
+          PUtData(obj._id, obj.category_table, obj.description, obj.Quantity, obj.price);
+          quantityCell.textContent = obj.Quantity;
+        };
+        newRow.appendChild(buy3Button);
     }
+
 
     function deleteData(UserId) {
-      axios
-        .delete(
-          `https://crudcrud.com/api/c4a5baa9a6e24b77b889bc0ec0cddda5/data/${UserId}`
-        )
+      axios.delete(`https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data/${UserId}`)
         .then((res) => {
           console.log("Deleted object", UserId);
         })
@@ -211,33 +194,19 @@
           console.log(err);
         });
     }
-    let currentEditItemId;
 
-    //when click buy then refresh the page and chage the data
-    function PUtData(
-      UserId,
-      category_table,
-      description,
-      updatedQuantity,
-      updatedPrice
-    ) {
-      axios
-        .put(
-          `https://crudcrud.com/api/c4a5baa9a6e24b77b889bc0ec0cddda5/data/${UserId}`,
-          {
-            category_table: category_table,
-            description: description,
-            Quantity: updatedQuantity,
-            price: updatedPrice,
-          }
-        )
-        .then((res) => {
-          alert("quantity and price will chage");
-          console.log(res);
-        })
-        .catch((err) => console.log(err));
-    }
-
-    function populateData(data) {}
-  </script>
+    function PUtData(UserId,category_table,description,updatedQuantity,updatedPrice) {
+      axios.put(`https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data/${UserId}`,
+            {
+              category_table: category_table,
+              description: description,
+              Quantity: updatedQuantity,
+              price: updatedPrice,
+            })
+              .then((res)=>console.log(res))
+              
+              .catch((err) => console.log(err));
+      }
+    </script>
+  </body>
 </html>
