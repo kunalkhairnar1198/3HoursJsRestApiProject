@@ -27,7 +27,6 @@
     <h1 style="text-align: center">Hello Project Start!</h1>
     <h2 style="text-align: center">Inventory management App</h2>
 
-    <!-- form will start -->
     <form action="#" class="form-control" id="form" onsubmit="AddItem(event)">
       <div class="container text-center p-5" id="container">
         <div class="row align-items-start">
@@ -62,7 +61,6 @@
       </div>
     </form>
 
-   <!-- print data -->
     <table class="table table-bordered" id="inventoryTable">
       <thead>
         <tr>
@@ -76,10 +74,9 @@
     </table>
 
     <script>
-
-      // create crud to crud empty api and use http request using axios get post update delete etc
       function AddItem(event) {
         event.preventDefault();
+
         let category_table = document.getElementById("category").value;
         let description = document.getElementById("desc").value;
         let Quantity = document.getElementById("number").value;
@@ -94,119 +91,129 @@
 
         AddDataItem(Data);
 
-        function AddDataItem(Data) {
-          axios.post("https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data",Data)
-            .then((res) => ShowAddedData(res.data))//it returns callback resolve it return as an promise
-            .catch((err) => console.log(err)); // it got error then get catch block request is not working
+     async function AddDataItem(Data) {
+      try{    
+          let res = await axios.post("https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data",Data)
+            ShowAddedData(res.data)
+          } 
+         catch(err) {
+             console.log(err)
+          }
         }
       }
 
-      window.addEventListener("DOMContentLoaded", () => {
-        axios.get("https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data")
-          .then((res) => {
+      window.addEventListener("DOMContentLoaded", async() => {
+          try{
+            let res = await axios.get("https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data")
+             
             for (let i = 0; i < res.data.length; i++) {
-              ShowAddedData(res.data[i]);
+                  ShowAddedData(res.data[i]);
+                }
             }
-          })
-          .catch((err) => console.log('network error'));
-      });
+              catch(err){
+                console.log(err)
+              }
+          });
 
       function ShowAddedData(obj) {
-        let newRow = document.createElement("tr");
+          let newRow = document.createElement("tr");
 
-        let categoryCell = document.createElement("td");
-        categoryCell.textContent = obj.category_table;
-        newRow.appendChild(categoryCell);
+          let categoryCell = document.createElement("td");
+          categoryCell.textContent = obj.category_table;
+          newRow.appendChild(categoryCell);
 
-        let descriptionCell = document.createElement("td");
-        descriptionCell.textContent = obj.description;
-        newRow.appendChild(descriptionCell);
+          let descriptionCell = document.createElement("td");           
+          descriptionCell.textContent = obj.description;
+          newRow.appendChild(descriptionCell);
 
-        let quantityCell = document.createElement("td");
-        quantityCell.textContent = obj.Quantity;
-        newRow.appendChild(quantityCell);
-
-        let priceCell = document.createElement("td");
-        priceCell.textContent = obj.price;
-        newRow.appendChild(priceCell);
-
-        let table = document.getElementById("inventoryTable");
-        table.appendChild(newRow);
-
-        let deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
-        deleteButton.className = " btn btn-danger btn-sm float-right edit";
-        deleteButton.onclick = function () {
-          deleteData(obj._id);
-          newRow.remove();
-        };
-        newRow.appendChild(deleteButton);
-
-        
-        let buy1Button = document.createElement("button");
-        buy1Button.textContent = "Buy 1";
-        buy1Button.className = "btn btn-primary btn-sm";
-
-        buy1Button.onclick = function () {
-          // when click Decrease quantity by 1
-          obj.Quantity = parseInt(obj.Quantity) - 1;
-          console.log("decrease by 1", obj.Quantity);
-          PUtData(obj._id, obj.category_table, obj.description, obj.Quantity, obj.price);
+          let quantityCell = document.createElement("td");
           quantityCell.textContent = obj.Quantity;
-        };
-        newRow.appendChild(buy1Button);
+          newRow.appendChild(quantityCell);
 
-        
-        let buy2Button = document.createElement("button");
-        buy2Button.textContent = "Buy 2";
-        buy2Button.className = "btn btn-success btn-sm";
+          let priceCell = document.createElement("td");
+          priceCell.textContent = obj.price;
+          newRow.appendChild(priceCell);
 
-        buy2Button.onclick = function () {
-          // when click Increase quantity by 1
-          obj.Quantity = parseInt(obj.Quantity) - 2 ;
-          console.log("decrease by 2", obj.Quantity);
-          PUtData(obj._id, obj.category_table, obj.description, obj.Quantity, obj.price);
-          quantityCell.textContent = obj.Quantity;
-        };
-        newRow.appendChild(buy2Button);
+          let table = document.getElementById("inventoryTable");
+          table.appendChild(newRow);
 
-        let buy3Button = document.createElement("button");
-        buy3Button.textContent = "Buy 3";
-        buy3Button.className = "btn btn-success btn-sm";
+          let deleteButton = document.createElement("button");
+          deleteButton.textContent = "Delete";
+          deleteButton.className = " btn btn-danger btn-sm  delete";
+          deleteButton.onclick = function () {
+            deleteData(obj._id);
+            newRow.remove();
+          };
+          newRow.appendChild(deleteButton);
+         
+          let buy1Button = document.createElement("button");
+          buy1Button.textContent = "Buy 1";
+          buy1Button.className = "btn btn-primary btn-sm  Buy 1";
 
-        buy3Button.onclick = function () {
-          // when click Increase quantity by 1
-          obj.Quantity = parseInt(obj.Quantity) + 1;
-          console.log("increase by 1", obj.Quantity);
-          PUtData(obj._id, obj.category_table, obj.description, obj.Quantity, obj.price);
-          quantityCell.textContent = obj.Quantity;
-        };
-        newRow.appendChild(buy3Button);
-    }
+          buy1Button.onclick = function () {
+            // when click Decrease quantity by 1
+            obj.Quantity = parseInt(obj.Quantity) - 1;
+            console.log("decrease by 1", obj.Quantity);
+            PUtData(obj._id, obj.category_table, obj.description, obj.Quantity, obj.price);
+            quantityCell.textContent = obj.Quantity;
+          };
+          newRow.appendChild(buy1Button);
+          
+          
+          let buy2Button = document.createElement("button");
+          buy2Button.textContent = "Buy 2";
+          buy2Button.className = "btn btn-success btn-sm  Buy 2";
+
+          buy2Button.onclick = function () {
+            // when click Increase quantity by 1
+            obj.Quantity = parseInt(obj.Quantity) - 2 ;
+            console.log("decrease by 2", obj.Quantity);
+            PUtData(obj._id, obj.category_table, obj.description, obj.Quantity, obj.price);
+            quantityCell.textContent = obj.Quantity;
+          };
+          newRow.appendChild(buy2Button);
+
+          let buy3Button = document.createElement("button");
+          buy3Button.textContent = "Buy 3";
+          buy3Button.className = "btn btn-success btn-sm  Buy 3";
+
+          buy3Button.onclick = function () {
+            // when click decrease quantity by 3
+            obj.Quantity = parseInt(obj.Quantity) - 3;
+            console.log("decrease by 3", obj.Quantity);
+            PUtData(obj._id, obj.category_table, obj.description, obj.Quantity, obj.price);
+            quantityCell.textContent = obj.Quantity;
+          };
+          newRow.appendChild(buy3Button);
+        }
 
 
-    function deleteData(UserId) {
-      axios.delete(`https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data/${UserId}`)
-        .then((res) => {
-          console.log("Deleted object", UserId);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+      async function deleteData(UserId) {
+       try{
+        let res = await axios.delete(`https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data/${UserId}`)
+          console.log('dellete object',UserId)
+        }
+        catch(err){
+          console.log(err)
+        }
+      }
 
-    function PUtData(UserId,category_table,description,updatedQuantity,updatedPrice) {
-      axios.put(`https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data/${UserId}`,
+      async function PUtData(UserId, category_table, description, updatedQuantity, updatedPrice) {
+      try{       
+        let res = await axios.put(`https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data/${UserId}`, 
             {
               category_table: category_table,
               description: description,
               Quantity: updatedQuantity,
               price: updatedPrice,
             })
-              .then((res)=>console.log(res))
-              
-              .catch((err) => console.log(err));
+             console.log('updated object',res)
+          }
+          catch(err){
+            console.log(err)
+          }
       }
+
     </script>
   </body>
 </html>
