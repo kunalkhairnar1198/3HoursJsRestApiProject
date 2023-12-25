@@ -74,6 +74,11 @@
     </table>
 
     <script>
+      //before code use the crudtocrud api put inside the code
+      //use async-await because it will remove .then(callbacks) and use async and await because it 
+      //provides redable code inside the function await keyword return response to hold the res variable in short 
+      //and handle the error try block it  will {}
+
       function AddItem(event) {
         event.preventDefault();
 
@@ -91,13 +96,14 @@
 
         AddDataItem(Data);
 
-     async function AddDataItem(Data) {
+      async function AddDataItem(Data) {
       try{    
           let res = await axios.post("https://crudcrud.com/api/943207b0bad246e29f181fcf87de1798/data",Data)
-            ShowAddedData(res.data)
+            ShowAddedData(res.data) //it will resolve when await get response otherwise it will throw the error
+            //it function will pass as an argument into the res.data when res will sucess fully resolve when post request res
           } 
          catch(err) {
-             console.log(err)
+             console.log(err) //it handle the error
           }
         }
       }
